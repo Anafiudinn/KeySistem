@@ -18,15 +18,23 @@ use App\Http\Controllers\HotelController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+// routes/api.php
 
+use App\Http\Controllers\AdminAuthController;
 
+Route::post('/admin/login', [AdminAuthController::class, 'login']);
 
-Route::post('/check-in', [HotelController::class, 'checkIn']);
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::post('/check-in', [HotelController::class, 'checkIn']);
+    Route::post('/cards/block', [HotelController::class, 'blockCard']);
+    Route::get('/access-history', [HotelController::class, 'accessHistory']);
+});
+
 Route::post('/authenticate-card', [HotelController::class, 'authenticateCard']);
 Route::post('/control-power', [HotelController::class, 'controlPower']);
 Route::post('/deactivate-power', [HotelController::class, 'deactivatePower']);
-Route::get('/access-history', [HotelController::class, 'accessHistory']);
-Route::post('/block-card', [HotelController::class, 'blockCard']);
+
+
 
 
 
